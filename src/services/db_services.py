@@ -82,7 +82,7 @@ def get_available_cages(snake,checkin,checkout):
 
     cages = query.order_by('price', '-square_meters')
 
-    print("from func",cages)
+    
 
     """ 
     The condition below is checked because the above query will return true if two differnt 
@@ -93,7 +93,6 @@ def get_available_cages(snake,checkin,checkout):
     final_cages = []
     for c in cages:
         for b in c.bookings:
-            print("here",b.guest_snake_id)
             if b.check_in_date <= checkin and b.check_out_date >= checkout and b.guest_snake_id is None:
                 final_cages.append(c)
 
@@ -118,3 +117,14 @@ def book_cage_for_snake(account,snake,cage,checkin,checkout):
 
 
     cage.save() #save is done for the parent document
+
+
+
+def get_bookings(snakes):
+    booked_cages = []
+    for s in snakes:
+        booked_cages.append((s,Cage.objects().filter(bookings__guest_snake_id=s.id)))
+    
+    return booked_cages
+
+    

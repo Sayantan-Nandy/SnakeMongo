@@ -126,9 +126,9 @@ def book_a_cage():
 
     cages = svc.get_available_cages(selected_snake,start_date,end_date)
 
-    print("cages",cages)
+    
     if cages == []:
-        print("No available dates")
+        print("No available cages for those dates")
         return
 
     for i,c in enumerate(cages):
@@ -146,10 +146,17 @@ def book_a_cage():
 
 def view_bookings():
     print(' ****************** Your bookings **************** ')
-    # TODO: List booking info along with snake info
 
     if not state.active_account:
         print("Login needed to view bookings")
         return
     
-    
+    snakes = svc.get_snake_list(state.active_account)
+
+    snakes_in_cages = svc.get_bookings(snakes)
+
+    for s,cages in snakes_in_cages:
+        for c in cages:
+            for b in c.bookings:
+                if b.guest_snake_id==s.id:
+                    print("Snake is {} in cage {} from {} to {}".format(s.name,c.name,b.check_in_date.strftime('%Y-%m-%d'),b.check_out_date.strftime('%Y-%m-%d')))
